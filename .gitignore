@@ -14,9 +14,8 @@ __pycache__/
 .env.*
 
 # generated or downloaded data
-backend/data/
-backend/data/temp/
+# backend/data/
+# backend/data/processed/
 backend/data/raw/
-backend/data/processed/
 backend/data/asset/
 

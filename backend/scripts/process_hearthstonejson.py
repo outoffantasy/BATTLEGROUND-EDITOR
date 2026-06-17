@@ -20,6 +20,9 @@ CATEGORY_FILES = {
     "timewarp": "timewarp.json",
 }
 
+STATS_FILE = "process_stats.txt"
+OUTPUT_FILES = ["all.json", *CATEGORY_FILES.values(), "keywords.json", STATS_FILE]
+
 KEYWORDS = [
     {"id": "battlecry", "label": "Battlecry", "tags": ["BATTLECRY"], "terms": ["Battlecry"]},
     {"id": "deathrattle", "label": "Deathrattle", "tags": ["DEATHRATTLE"], "terms": ["Deathrattle", "Deathrattles"]},
@@ -71,10 +74,17 @@ def write_json(path: Path, data: Any) -> None:
         f.write("\n")
 
 
-def clear_json_outputs(out_dir: Path) -> None:
+def write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+def clear_outputs(out_dir: Path) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
-    for path in out_dir.glob("*.json"):
-        path.unlink()
+    for filename in OUTPUT_FILES:
+        path = out_dir / filename
+        if path.exists():
+            path.unlink()
 
 
 def index_by_dbf(cards: list[dict[str, Any]]) -> dict[int, dict[str, Any]]:
@@ -215,7 +225,10 @@ def build_minion(
 ) -> dict[str, Any]:
     result = base_card(card, zh_by_dbf, category)
     add_if_present(result, "tier", card.get("techLevel"))
-    add_if_present(result, "cost", card.get("cost"))
+    if category == "timewarp":
+        add_if_present(result, "chronumCost", card.get("cost"))
+    else:
+        result["cost"] = 3
     add_if_present(result, "attack", card.get("attack"))
     add_if_present(result, "health", card.get("health"))
     tribes = get_tribes(card)
@@ -231,7 +244,10 @@ def build_minion(
 def build_spell_like(card: dict[str, Any], zh_by_dbf: dict[int, dict[str, Any]], category: str) -> dict[str, Any]:
     result = base_card(card, zh_by_dbf, category)
     add_if_present(result, "tier", card.get("techLevel"))
-    add_if_present(result, "cost", card.get("cost"))
+    if category == "timewarp":
+        add_if_present(result, "chronumCost", card.get("cost"))
+    else:
+        add_if_present(result, "cost", card.get("cost"))
     return result
 
 
@@ -267,9 +283,15 @@ def build_hero(
 
 
 def card_sort_key(card: dict[str, Any]) -> tuple[Any, ...]:
+    category = card.get("category")
+    if category == "timewarp":
+        price = card.get("chronumCost")
+    else:
+        price = card.get("cost")
+
     return (
         card.get("tier") if isinstance(card.get("tier"), int) else 999,
-        card.get("cost") if isinstance(card.get("cost"), int) else 999,
+        price if isinstance(price, int) else 999,
         card.get("name", {}).get("enUS") or "",
         card.get("id") or "",
     )
@@ -277,6 +299,16 @@ def card_sort_key(card: dict[str, Any]) -> tuple[Any, ...]:
 
 def sorted_ids(cards_by_id: dict[str, dict[str, Any]], ids: list[str]) -> list[str]:
     return sorted(ids, key=lambda card_id: card_sort_key(cards_by_id[card_id]))
+
+
+def build_stats_text(stats: dict[str, int]) -> str:
+    lines = [f"all.json: {stats['all']}"]
+    lines.extend(
+        f"{CATEGORY_FILES[category]}: {stats[category]}"
+        for category in CATEGORY_FILES
+    )
+    lines.append(f"keywords.json: {stats['keywords']}")
+    return "\n".join(lines) + "\n"
 
 
 def process(en_cards: list[dict[str, Any]], zh_cards: list[dict[str, Any]]) -> dict[str, Any]:
@@ -338,6 +370,12 @@ def process(en_cards: list[dict[str, Any]], zh_cards: list[dict[str, Any]]) -> d
         for card_id in sorted(cards_by_id, key=lambda id_: (cards_by_id[id_]["category"], *card_sort_key(cards_by_id[id_])))
     }
 
+    stats = {
+        **{category: len(categories[category]) for category in CATEGORY_FILES},
+        "all": len(cards_by_id),
+        "keywords": len(KEYWORDS),
+    }
+
     files: dict[str, Any] = {
         "all": {
             "source": "hearthstonejson",
@@ -345,6 +383,7 @@ def process(en_cards: list[dict[str, Any]], zh_cards: list[dict[str, Any]]) -> d
             "generatedAt": generated_at,
             "cards": cards_by_id,
         },
+        "statsText": build_stats_text(stats),
         "keywords": {
             "keywords": [
                 {"id": keyword["id"], "label": keyword["label"]}
@@ -382,11 +421,12 @@ def main() -> None:
 
     files = process(en_cards, zh_cards)
 
-    clear_json_outputs(args.out_dir)
+    clear_outputs(args.out_dir)
     write_json(args.out_dir / "all.json", files["all"])
     for category, filename in CATEGORY_FILES.items():
         write_json(args.out_dir / filename, files[category])
     write_json(args.out_dir / "keywords.json", files["keywords"])
+    write_text(args.out_dir / STATS_FILE, files["statsText"])
 
     print(f"process_hearthstonejson.py version: {SCRIPT_VERSION}")
     print(f"Wrote output folder: {args.out_dir}")

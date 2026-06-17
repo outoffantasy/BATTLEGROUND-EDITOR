@@ -1,0 +1,10 @@
+all.json: 1212
+heroes.json: 119
+minions.json: 278
+quests.json: 20
+rewards.json: 73
+anomalies.json: 111
+spells.json: 72
+trinkets.json: 343
+timewarp.json: 196
+keywords.json: 17

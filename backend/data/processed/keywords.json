@@ -1,0 +1,72 @@
+{
+  "keywords": [
+    {
+      "id": "battlecry",
+      "label": "Battlecry"
+    },
+    {
+      "id": "deathrattle",
+      "label": "Deathrattle"
+    },
+    {
+      "id": "taunt",
+      "label": "Taunt"
+    },
+    {
+      "id": "divine_shield",
+      "label": "Divine Shield"
+    },
+    {
+      "id": "reborn",
+      "label": "Reborn"
+    },
+    {
+      "id": "magnetic",
+      "label": "Magnetic"
+    },
+    {
+      "id": "discover",
+      "label": "Discover"
+    },
+    {
+      "id": "avenge",
+      "label": "Avenge"
+    },
+    {
+      "id": "blood_gem",
+      "label": "Blood Gem"
+    },
+    {
+      "id": "spellcraft",
+      "label": "Spellcraft"
+    },
+    {
+      "id": "rally",
+      "label": "Rally"
+    },
+    {
+      "id": "buddy",
+      "label": "Buddy"
+    },
+    {
+      "id": "pass",
+      "label": "Pass"
+    },
+    {
+      "id": "refresh",
+      "label": "Refresh"
+    },
+    {
+      "id": "stealth",
+      "label": "Stealth"
+    },
+    {
+      "id": "venomous",
+      "label": "Venomous"
+    },
+    {
+      "id": "windfury",
+      "label": "Windfury"
+    }
+  ]
+}
