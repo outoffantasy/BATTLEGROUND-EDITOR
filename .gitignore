@@ -1,14 +1,22 @@
+# frontend dependencies and build output
 node_modules/
 dist/
 build/
 
+# python virtual environments and cache
 .venv/
 venv/
 __pycache__/
 *.pyc
 
+# environment variables / secrets
 .env
 .env.*
 
+# generated or downloaded data
+backend/data/
 backend/data/temp/
+backend/data/raw/
+backend/data/processed/
+backend/data/asset/
 
