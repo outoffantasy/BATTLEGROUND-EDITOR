@@ -11,7 +11,7 @@ __pycache__/
 
 # environment variables / secrets
 .env
-.env.*
+# .env.*
 
 # generated or downloaded data
 # backend/data/
