@@ -16,11 +16,6 @@ __pycache__/
 # generated or downloaded data
 # backend/data/
 # backend/data/processed/
-
-
-# backend/data/raw/
-# backend/data/asset/
-
-backend/data/asset/render/enUS/cards
-backend/data/asset/render/enUS/download_assets_result.txt
+backend/data/raw/
+backend/data/asset/
 

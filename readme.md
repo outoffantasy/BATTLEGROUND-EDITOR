@@ -1,3 +1,22 @@
+环境 / 构建命令：
+
+Python backend:
+
+```bash
+cd backend
+uv sync --dev
+uv run python -m py_compile scripts/*.py
+```
+
+Frontend:
+
+```bash
+cd frontend
+nvm use 22
+npm install
+npm run build
+```
+
 1.
 神圣火花机器人 和 暗潮战略专家 这两张卡，现在的版本里没有。但是在爬下来的json数据里有。
 应该清除掉。
@@ -43,6 +62,5 @@ catagory 和 kind 的区别，
 scripts的流程：
 sync_raw_hearthstonejson.py
 process_hearthstonejson.py
-
 
 

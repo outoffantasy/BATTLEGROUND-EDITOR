@@ -12,6 +12,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "backend/.python-version"
+
       - name: Check Python syntax
         run: python -m py_compile backend/scripts/*.py
 
@@ -20,3 +25,11 @@ jobs:
           for file in backend/data/processed/*.json; do
             python -m json.tool "$file" > /dev/null
           done
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: "frontend/.nvmrc"
+
+      - name: Check frontend environment
+        run: npm --prefix frontend run check
