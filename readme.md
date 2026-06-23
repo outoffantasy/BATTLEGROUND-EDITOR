@@ -5,7 +5,8 @@ Python backend:
 ```bash
 cd backend
 uv sync --dev
-uv run python -m py_compile scripts/*.py
+uv run python -m compileall data_process
+uv run pytest
 ```
 
 Frontend:
@@ -59,8 +60,12 @@ catagory 和 kind 的区别，
 
 
 
-scripts的流程：
-sync_raw_hearthstonejson.py
-process_hearthstonejson.py
+data_process的流程：
+sources/sync_raw_hearthstonejson.py
+transforms/process_hearthstonejson.py
+validators/processed.py
+exporters/frontend.py
 
+完整流程入口：
+run_pipeline.py
 

@@ -8,6 +8,7 @@ build/
 venv/
 __pycache__/
 *.pyc
+.pytest_cache/
 
 # environment variables / secrets
 .env
@@ -16,6 +17,5 @@ __pycache__/
 # generated or downloaded data
 # backend/data/
 # backend/data/processed/
-backend/data/raw/
-backend/data/asset/
-
+# backend/data/raw/
+backend/data/
