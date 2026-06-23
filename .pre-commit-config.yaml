@@ -1,3 +1,4 @@
+# 本地 commit 前检查用的配置文件
 repos:
   # 从 pre-commit/pre-commit-hooks 这个公开仓库下载一组现成 hook。
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -13,8 +14,8 @@ repos:
 
   - repo: local
     hooks:
-      - id: py-compile-backend-scripts
-        name: Check Python syntax for backend scripts
-        entry: uv --directory backend run python -m py_compile scripts/download_card_assets.py scripts/process_hearthstonejson.py scripts/sync_raw_hearthstonejson.py
+      - id: py-compile-backend-data-process
+        name: Check Python syntax for backend data_process
+        entry: uv --directory backend run python -m compileall data_process tests
         language: system
         pass_filenames: false

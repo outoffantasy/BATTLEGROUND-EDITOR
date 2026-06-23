@@ -17,8 +17,18 @@ jobs:
         with:
           python-version-file: "backend/.python-version"
 
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
       - name: Check Python syntax
-        run: python -m py_compile backend/scripts/*.py
+        working-directory: backend
+        run: uv run python -m compileall data_process tests
+
+      - name: Run backend tests
+        working-directory: backend
+        run: uv run pytest
 
       - name: Check processed JSON
         run: |
