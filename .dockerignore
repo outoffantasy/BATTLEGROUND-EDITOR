@@ -1,0 +1,10 @@
+.git/
+.agents/
+.codex/
+backend/.venv/
+backend/.pytest_cache/
+**/__pycache__/
+**/*.pyc
+
+frontend/node_modules/
+.env

@@ -1,64 +1,91 @@
+## 一、docker 环境构建
+
 环境 / 构建命令：
 
-Python backend:
+项目开发环境使用 Docker。镜像内部是 Debian 13（`python:3.12-trixie`），Python 虚拟环境在容器内的 `/opt/venv`，Playwright Chromium 在 `/ms-playwright`。源码通过 bind mount 挂载到容器的 `/workspace`。
 
+构建开发镜像：
 ```bash
-cd backend
-uv sync --dev
-uv run python -m compileall data_process
-uv run pytest
+docker compose -f docker-compose.yml build dev
 ```
 
-Frontend:
-
+进入开发容器：
 ```bash
-cd frontend
-nvm use 22
-npm install
-npm run build
+docker compose -f docker-compose.yml run --rm dev
 ```
 
-1.
-神圣火花机器人 和 暗潮战略专家 这两张卡，现在的版本里没有。但是在爬下来的json数据里有。
-应该清除掉。
-
-TOTEM 和 DRAENEI 这两个 tribe 也不存在，应该清除掉。
-
-
-2.
-最好能有个自动校验机制吧！
-比如每张卡去hsbg校验下？或者去官网校验下？校验下看看这张卡在现在的版本还有没有了。（避免出现 1. 中的问题）
-
-可以再加个字段，如果校验没通过，就说明这张卡的数据有问题。要标注下。
-
-
-3.
-单人酒馆模式 和 双人模式的牌，没有分清楚。
-要加一个字段。
-
-
-4.
-这个process_hearthstonejson.py不行，要全删了重写。
-data/temp 里的数据也都不行。现在放在这里只是暂时看看罢了。
-
+退出当前的 docker container：
+```
+exit 或者 CTRL + D
+```
 
 
 另：
-5.
-比如，At the start of combat...、At the end of your turn...、等这种。
-现在好像没有这些tag、分类方法。后面可以尝试这加上。
-（raw data 里好像有 START_OF_COMBAT 和 END_OF_TURN_TRIGGER 这两个字段）
+如果你 增加 或 修改 了项目的依赖，修改了
+```
+ dockerfile, docker-compose.yml
+ uv.lock, pyproject.toml, .python-version
+ package-lock.json, package.json, .nvmrc
+```
+等依赖文件，你需要重新 build 镜像：
+
+```bash
+docker compose -f docker-compose.yml build dev
+```
 
 
-6.
-text的文本没有清洗。
-textPlain 应该清洗成text。
 
-7.
-catagory 和 kind 的区别，
-之所有设置这两个，是因为要处理timewarp的问题。
+## 二、容器内确认环境
+
+容器内确认环境：
+
+```bash
+cat /etc/os-release
+which python
+python --version
+python -m playwright --version
+node --version
+```
+
+容器内运行 backend 检查：
+
+```bash
+cd backend
+python -m compileall data_process tests
+pytest
+```
+
+容器内运行 frontend 检查：
+
+```bash
+npm --prefix frontend run check
+```
+
+如果要清理旧的本机环境，可以手动执行：
+
+```bash
+rm -rf backend/.venv backend/.pytest_cache frontend/node_modules
+```
 
 
+## 三、清理 docker
+清理没用的旧 image：用来清理 dangling images，比如 `<none>:<none>`。
+```
+docker image prune
+```
+
+清理 build cache：这个会清理构建缓存。
+```
+docker builder prune
+```
+
+清理停止的 container、没用的 network、dangling image、build cache：
+```
+docker system prune
+```
+
+
+## 四、
 
 data_process的流程：
 sources/sync_raw_hearthstonejson.py

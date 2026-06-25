@@ -1,0 +1,16 @@
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: battleground-editor:dev
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+    environment:
+      VIRTUAL_ENV: /opt/venv
+      UV_PROJECT_ENVIRONMENT: /opt/venv
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+    stdin_open: true
+    tty: true
+    command: bash
