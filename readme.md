@@ -86,6 +86,18 @@ docker system prune
 
 
 ## 四、
+从暴雪炉石战棋官网爬数据：https://hearthstone.blizzard.com/en-us/battlegrounds
+进去 docker 后，运行
+```
+python backend/data_process/sources/crawl_blizzard_bg.py
+```
+如果之前爬过一次，要在之前的基础上再爬，运行：
+```
+python backend/data_process/sources/crawl_blizzard_bg.py --resume-from data/raw/crawl/blizzard_bg/en-us/<run_id>
+```
+
+
+## 五、
 
 data_process的流程：
 sources/sync_raw_hearthstonejson.py

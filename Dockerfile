@@ -24,6 +24,8 @@ RUN ln -sf /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
     && ln -sf /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx \
     && pip install --no-cache-dir uv==0.11.16
 
+RUN printf '\n# Colored prompt for interactive dev shells.\ncase "$-" in\n  *i*) PS1="\\[\\e[1;32m\\]\\u@\\h\\[\\e[0m\\]:\\[\\e[1;34m\\]\\w\\[\\e[0m\\]# " ;;\nesac\n' >> /root/.bashrc
+
 WORKDIR /workspace/backend
 
 COPY backend/pyproject.toml backend/uv.lock backend/.python-version ./
