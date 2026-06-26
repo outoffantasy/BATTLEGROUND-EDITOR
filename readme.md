@@ -95,6 +95,10 @@ python backend/data_process/sources/crawl_blizzard_bg.py
 ```
 python backend/data_process/sources/crawl_blizzard_bg.py --resume-from data/raw/crawl/blizzard_bg/en-us/<run_id>
 ```
+删除之前的<run_id>数据：
+```
+sudo rm -rf -- backend/data/raw/crawl/blizzard_bg/en-us/<run_id>
+```
 
 
 ## 五、
